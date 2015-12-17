@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'selenium-webdriver'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'sqlite3'
+  # s.add_development_dependency 'offsite_payments', git: 'https://github.com/SecretAgents/offsite_payments', branch: 'yandex_kassa'
 end
