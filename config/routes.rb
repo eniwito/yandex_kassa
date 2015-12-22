@@ -4,4 +4,6 @@ Spree::Core::Engine.routes.draw do
   get '/yandexkassa/:gateway_id/:order_id' => 'yandexkassa#show', as: :yandexkassa
   post '/yandexkassa/check_order' => 'yandexkassa#check_order'
   post '/yandexkassa/payment_aviso' => 'yandexkassa#payment_aviso'
+  post '/yandexkassa/test_check_order' => 'yandexkassa#check_order'
+  post '/yandexkassa/test_payment_aviso' => 'yandexkassa#payment_aviso'
 end
