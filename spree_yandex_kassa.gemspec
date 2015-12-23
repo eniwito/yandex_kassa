@@ -3,8 +3,8 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_yandex_kassa'
   s.version     = '2.3.10'
-  s.summary     = 'TODO: Add gem summary here'
-  s.description = 'TODO: Add (optional) gem description here'
+  s.summary     = 'Yandex kassa for spree'
+  s.description = 'Yandex kassa for spree'
   s.required_ruby_version = '>= 1.9.3'
 
   s.author    = 'Alexander Andreev'
