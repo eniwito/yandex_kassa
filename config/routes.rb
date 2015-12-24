@@ -6,6 +6,8 @@ Spree::Core::Engine.routes.draw do
   get  '/yandexkassa/failed_payment' => 'yandexkassa#failed_payment', as: :failed_payment
   post '/yandexkassa/check_order' => 'yandexkassa#check_order'
   post '/yandexkassa/payment_aviso' => 'yandexkassa#payment_aviso'
+  # Временно
+  post '/yandexkassa/aviso_order' => 'yandexkassa#payment_aviso'
   post '/yandexkassa/test_check_order' => 'yandexkassa#check_order'
   post '/yandexkassa/test_payment_aviso' => 'yandexkassa#payment_aviso'
 end

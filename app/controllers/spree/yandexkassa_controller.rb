@@ -102,6 +102,14 @@ class Spree::YandexkassaController < Spree::BaseController
     render text: @notification.response
   end
 
+  def success_payment
+
+  end
+
+  def failed_payment
+
+  end
+
   def create_notification
     logger.debug "[yandexkassa] create_notification"
     @notification = Yandexkassa::Notification.new request.raw_post
