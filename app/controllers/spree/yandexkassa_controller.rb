@@ -37,11 +37,12 @@ class Spree::YandexkassaController < Spree::BaseController
     @gateway = Spree::BillingIntegration::YandexkassaIntegration.current
     if @notification.acknowledge @gateway.options[:password]
       logger.debug "[yandexkassa] check notification: true"
-      order = Spree::Order.find_by id: @notification.item_id
+      order = Spree::Order.find_by number: @notification.item_id
+      logger.debug "[yandexkassa] order #{order.inspect}"
       # TODO может добавить еще каких нибудь проверок
       if  order and
-          order.total.to_f == @notification.gross and
-          order.user_id == @notification.customer_id
+          order.total.to_f >= @notification.gross and
+          order.email == @notification.customer_id
       # Не делаем ничего, заказ правильный
         logger.debug "[yandexkassa] order correct"
       else
@@ -104,6 +105,6 @@ class Spree::YandexkassaController < Spree::BaseController
   def create_notification
     logger.debug "[yandexkassa] create_notification"
     @notification = Yandexkassa::Notification.new request.raw_post
-    logger.debug "[yandexkassa] notification: #{@notification}"
+    logger.debug "[yandexkassa] notification: #{@notification.inspect}"
   end
 end
