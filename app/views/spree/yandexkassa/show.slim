@@ -1,9 +1,0 @@
-- payment_service_for @order.id, @order.user_id,
-                      :currency => 'RUR',
-                      :amount => @order.total.to_f,
-                      :service => :yandexkassa,
-                      :html => {:id => 'payment-form'} do |service|
-  - service.scid @gateway.options[:scid]
-  - service.shopId @gateway.options[:shopId]
-  - service.paymentType 'AC'
-  = submit_tag 'submit'
