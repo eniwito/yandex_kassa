@@ -1,4 +1,4 @@
-- payment_service_for @order.id, @order.user_id,
+- payment_service_for @order.number, @order.email,
                       :currency => 'RUR',
                       :amount => @order.total.to_f,
                       :service => :yandexkassa,
@@ -18,8 +18,8 @@
     br
   = submit_tag 'Перейти к оплате', class: 'yandex_payment_submit'
 
-- content_for :head do
-  javascript:
-    $(document).ready(function () {
-      $('.yandex_payment_submit').click();
-    });
+/- content_for :head do
+/  javascript:
+//    $(document).ready(function () {
+//      $('.yandex_payment_submit').click();
+//    });
