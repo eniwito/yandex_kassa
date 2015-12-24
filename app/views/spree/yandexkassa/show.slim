@@ -1,4 +1,4 @@
-- payment_service_for @order.id, @order.user_id,
+- payment_service_for @order.number, @order.email,
                       :currency => 'RUR',
                       :amount => @order.total.to_f,
                       :service => :yandexkassa,
