@@ -7,6 +7,8 @@ class Spree::YandexkassaController < Spree::BaseController
   # To avoid error undefined local variable or method `cache_key_for_taxons'
   helper 'spree/store'
 
+  helper 'spree/orders'
+
   def show
     @order = Spree::Order.find(params[:order_id])
     @order.state = params[:state] if params[:state]
@@ -62,7 +64,7 @@ class Spree::YandexkassaController < Spree::BaseController
     @gateway = Spree::BillingIntegration::YandexkassaIntegration.current
     if @notification.acknowledge @gateway.options[:password]
       logger.debug "[yandexkassa] check notification: true"
-      order = Spree::Order.find_by id: @notification.item_id
+      order = Spree::Order.find_by number: @notification.item_id
       if order
         # TODO надо ли делать транзакцию?
         # robokassa_transaction = Spree::RobokassaTransaction.create
