@@ -42,7 +42,7 @@ class Spree::YandexkassaController < Spree::BaseController
       # TODO может добавить еще каких нибудь проверок
       if  order and
           order.total.to_f >= @notification.gross and
-          order.email == @notification.customer_id
+          order.user_id == @notification.customer_id.split.first
       # Не делаем ничего, заказ правильный
         logger.debug "[yandexkassa] order correct"
       else
