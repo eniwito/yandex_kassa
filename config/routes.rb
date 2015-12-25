@@ -13,7 +13,7 @@ Spree::Core::Engine.routes.draw do
   post '/yandexkassa/payment_aviso' => 'yandexkassa#payment_aviso'
 
   # Временно
-  post '/yandexkassa/aviso_order' => 'yandexkassa#payment_aviso'
+  match '/yandexkassa/aviso_order' => 'yandexkassa#payment_aviso', via: [:get, :post]
 
   post '/yandexkassa/test_check_order' => 'yandexkassa#check_order'
   post '/yandexkassa/test_payment_aviso' => 'yandexkassa#payment_aviso'
