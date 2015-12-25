@@ -1,0 +1,15 @@
+ru:
+  spree:
+    payment_method_PC: Оплата из кошелька в Яндекс.Деньгах
+    payment_method_AC: Оплата с произвольной банковской карты
+    payment_method_MC: Платеж со счета мобильного телефона
+    payment_method_GP: Оплата наличными через кассы и терминалы
+    payment_method_WM: Оплата из кошелька в системе WebMoney
+    payment_method_SB: 'Оплата через Сбербанк: по смс или Сбербанк Онлайн'
+    payment_method_MP: Оплата через мобильный терминал (mPOS)
+    payment_method_AB: Оплата через Альфа-Клик
+    payment_method_MA: Оплата через MasterPass
+    payment_method_PB: Оплата через интернет-банк Промсвязьбанка
+    payment_method_QW: Оплата через QIWI Wallet
+    payment_method_KV: Оплата через КупиВкредит (Тинькофф Банк)
+    payment_method_QP: Оплата через Доверительный платеж («Куппи.ру»)
