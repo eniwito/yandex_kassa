@@ -3,6 +3,7 @@ class Spree::YandexkassaController < Spree::BaseController
   before_filter :create_notification, :only => [:check_order, :payment_aviso]
 
   include OffsitePayments::Integrations
+  include Spree::YandexkassaHelper
 
   # To avoid error undefined local variable or method `cache_key_for_taxons'
   helper 'spree/store'
@@ -13,6 +14,7 @@ class Spree::YandexkassaController < Spree::BaseController
     @order = Spree::Order.find(params[:order_id])
     @order.state = params[:state] if params[:state]
     @gateway = @order.available_payment_methods.detect { |x| x.id == params[:gateway_id].to_i }
+    @payment_methods = checked_payment_methods(@gateway) # Доступные способы оплаты яндекс кассы
 
     if @order.blank? || @gateway.blank?
       flash[:error] = I18n.t("invalid_arguments")
