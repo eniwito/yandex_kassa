@@ -1,7 +1,7 @@
 Spree::Core::Engine.routes.draw do
   # Add your extension routes here
 
-  get '/yandexkassa/:gateway_id/:order_id' => 'yandexkassa#show', as: :yandexkassa
+  get '/yandexkassa/:gateway_id/:order_number' => 'yandexkassa#show', as: :yandexkassa
   get  '/yandexkassa/success_payment' => 'yandexkassa#success_payment', as: :success_payment
   get  '/yandexkassa/failed_payment' => 'yandexkassa#failed_payment', as: :failed_payment
 

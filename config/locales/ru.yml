@@ -13,3 +13,7 @@ ru:
     payment_method_QW: Оплата через QIWI Wallet
     payment_method_KV: Оплата через КупиВкредит (Тинькофф Банк)
     payment_method_QP: Оплата через Доверительный платеж («Куппи.ру»)
+
+    order_not_found: Заказ не найден
+    payment_more_than_order_price: Оплата превышает стоимость заказа
+    order_belongs_to_another_user: Заказ оформлен на другого клиента
