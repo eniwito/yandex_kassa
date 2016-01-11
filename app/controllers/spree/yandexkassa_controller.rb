@@ -48,7 +48,7 @@ class Spree::YandexkassaController < Spree::BaseController
         @notification.message = Spree.t :order_not_found
       elsif order.total.to_f < @notification.gross
         @notification.message = Spree.t :payment_more_than_order_price
-      elsif order.user_id != @notification.customer_id.split.first
+      elsif order.user_id != @notification.customer_id.split.first.to_i
         @notification.message = Spree.t :order_belongs_to_another_user
         # Order with error. Set error code
         logger.debug "[yandexkassa] order with error #{@notification.message}"
@@ -56,6 +56,7 @@ class Spree::YandexkassaController < Spree::BaseController
       else
         # Do nothing. Order correct.
         logger.debug "[yandexkassa] order correct"
+        @notification.set_response 0
       end
     else
       logger.debug "[yandexkassa] check notification: false"
@@ -100,6 +101,8 @@ class Spree::YandexkassaController < Spree::BaseController
           logger.debug "[yandexkassa] order.update!"
           order.update!
         end
+
+        @notification.set_response 0
       else
         logger.debug "[yandexkassa] order not found"
         @notification.set_response 1
