@@ -11,26 +11,27 @@ class Spree::YandexkassaController < Spree::BaseController
   helper 'spree/orders'
 
   def show
-    @order = Spree::Order.find(params[:order_id])
+    @order = Spree::Order.find_by(number: params[:order_number])
     @order.state = params[:state] if params[:state]
     @gateway = @order.available_payment_methods.detect { |x| x.id == params[:gateway_id].to_i }
-    @payment_methods = checked_payment_methods(@gateway) # Доступные способы оплаты яндекс кассы
+    # Available(checked) payments methods for Yandexkassa
+    @payment_methods = checked_payment_methods(@gateway)
 
     if @order.blank? || @gateway.blank?
       flash[:error] = I18n.t("invalid_arguments")
       redirect_to :back
     else
-      # Находим оплату для яндекскассы
+      # Find payment for Yandexkassa
       payment = @order.payments.select { |p| p.payment_method.kind_of? Spree::BillingIntegration::YandexkassaIntegration and p.can_started_processing? }.first
       if payment.nil?
         payment = @order.payments.create(amount: 0, payment_method: @gateway)
       end
-      # Выставляем сумму и статус "В обработке"
+      # Set amount and start processing
       payment.amount = @order.total
       payment.save
       payment.started_processing!
 
-      # Для правильного адреса в платежной форме надо явно указать среду OffsitePayments
+      # For correct path in payment form we need set mode for OffsitePayments
       OffsitePayments.mode = @gateway.options[:test_mode] ? :test : :production
       render :action => :show
     end
@@ -43,16 +44,19 @@ class Spree::YandexkassaController < Spree::BaseController
       logger.debug "[yandexkassa] check notification: true"
       order = Spree::Order.find_by number: @notification.item_id
       logger.debug "[yandexkassa] order #{order.inspect}"
-      # TODO может добавить еще каких нибудь проверок
-      if  order and
-          order.total.to_f >= @notification.gross and
-          order.user_id == @notification.customer_id.split.first
-      # Не делаем ничего, заказ правильный
-        logger.debug "[yandexkassa] order correct"
-      else
-        # В заказе ошибка, выставляем код ошибки
-        logger.debug "[yandexkassa] order with error"
+      if not order
+        @notification.message = Spree.t :order_not_found
+      elsif order.total.to_f < @notification.gross
+        @notification.message = Spree.t :payment_more_than_order_price
+      elsif order.user_id != @notification.customer_id.split.first.to_i
+        @notification.message = Spree.t :order_belongs_to_another_user
+        # Order with error. Set error code
+        logger.debug "[yandexkassa] order with error #{@notification.message}"
         @notification.set_response 1
+      else
+        # Do nothing. Order correct.
+        logger.debug "[yandexkassa] order correct"
+        @notification.set_response 0
       end
     else
       logger.debug "[yandexkassa] check notification: false"
@@ -71,7 +75,7 @@ class Spree::YandexkassaController < Spree::BaseController
         # TODO надо ли делать транзакцию?
         # robokassa_transaction = Spree::RobokassaTransaction.create
 
-        # Находим оплату для яндекскассы со статусом "В обработке" и подходящей суммой
+        # Find payment for Yandexkassa with status processing and equal amount
         payment = order.payments.select { |p| p.payment_method.kind_of? Spree::BillingIntegration::YandexkassaIntegration and p.processing? and p.amount.to_f == @notification.gross }.first
         logger.debug "[yandexkassa] payment: #{payment}"
         if payment.nil?
@@ -84,17 +88,21 @@ class Spree::YandexkassaController < Spree::BaseController
           payment.started_processing!
         end
 
-        # Завершаем оплату
+        # Complete payment
         logger.debug "[yandexkassa] payment.complete!"
         payment.complete!
 
-        # Переводим заказ в статус "Оплачен"
-        logger.debug "[yandexkassa] order.update!"
-        order.update!
-        logger.debug "[yandexkassa] order.pay!"
-        order.pay!
-        logger.debug "[yandexkassa] order.update!"
-        order.update!
+        if order.payment_total?
+          # Change order state to paid.
+          logger.debug "[yandexkassa] order.update!"
+          order.update!
+          logger.debug "[yandexkassa] order.pay!"
+          order.pay!
+          logger.debug "[yandexkassa] order.update!"
+          order.update!
+        end
+
+        @notification.set_response 0
       else
         logger.debug "[yandexkassa] order not found"
         @notification.set_response 1
