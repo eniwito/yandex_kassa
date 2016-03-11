@@ -23,6 +23,10 @@ module SpreeYandexKassa
       end
     end
 
+    initializer "spree.yandex_kassa", :after => "spree.environment" do |app|
+      Spree::PermittedAttributes.taxon_attributes << :category_code
+    end
+
     config.to_prepare &method(:activate).to_proc
   end
 end
