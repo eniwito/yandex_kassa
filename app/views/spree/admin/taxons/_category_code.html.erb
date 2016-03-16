@@ -1,0 +1,7 @@
+<div data-hook="admin_yandex_market_name_form" class="alpha omega twelve columns">
+  <%= f.field_container :category_code do %>
+      <%= f.label :category_code, 'Яндекс.Касса - код категории товара' %><br/>
+      <%= text_field :taxon, :category_code, :class => 'fullwidth' %>
+      <%= error_message_on :taxon, :category_code %><br/>
+  <% end %>
+</div>
