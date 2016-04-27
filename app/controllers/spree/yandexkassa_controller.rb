@@ -15,7 +15,9 @@ class Spree::YandexkassaController < Spree::BaseController
     @order.state = params[:state] if params[:state]
     @gateway = @order.available_payment_methods.detect { |x| x.id == params[:gateway_id].to_i }
     # Available(checked) payments methods for Yandexkassa
-    @payment_methods = checked_payment_methods(@gateway)
+    # @payment_methods = @gateway.checked_payment_methods
+
+    @payment_methods = @gateway.available_payment_methods @order
 
     if @order.blank? || @gateway.blank?
       flash[:error] = I18n.t("invalid_arguments")
