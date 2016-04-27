@@ -10,17 +10,11 @@ module Spree::YandexkassaHelper
     end
   end
 
-  # @return [Array] of symbols checked payment methods.
-  # For ex. [:payment_method_AC, :payment_method_MC, :payment_method_PB]
-  def checked_payment_methods(gateway)
-    gateway.defined_preferences.select { |p| p.match /payment_method_/ }.select { |p| gateway.options[p] }
-  end
-
   CREDIT_FIELDS = %w(category_code goods_name goods_description goods_quantity goods_cost)
 
   # mapping needed fields fields for credit
   def map_credit_fields(order)
-    1.upto(@order.line_items.count) do |i|
+    1.upto(order.line_items.count) do |i|
       CREDIT_FIELDS.each do |field|
         OffsitePayments::Integrations::Yandexkassa::Helper.mapping "#{field}_#{i}".to_sym, "#{field}_#{i}" unless OffsitePayments::Integrations::Yandexkassa::Helper.mappings["#{field}_#{i}".to_sym].present?
       end
