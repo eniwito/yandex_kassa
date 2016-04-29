@@ -33,11 +33,13 @@
           ' Сумма заказа:
           = @order.total.to_f
         br
-      - unless @payment_methods.blank?
+      - if @payment_methods.present?
         .payment_methods_block
           .payment_methods_label Выберите способ оплаты:
           .payment_methods_list
             - @payment_methods.each do |payment_method|
               - payment_method_name = payment_method.to_s.split('_').last
               .payment_method_item class="#{'active ' if payment_method == @payment_methods.first}#{payment_method_name}" = link_to Spree.t(payment_method), '#', data: {payment_method: payment_method_name}
-      = submit_tag 'Перейти к оплате', class: 'yandex_payment_submit'
+        = submit_tag 'Перейти к оплате', class: 'yandex_payment_submit'
+      - else
+        | Извините, оплата невозможна, потому что сумма заказа превышает лимиты по оплаты с помощью яндекс кассы. Пожалуйста вернитесь назад и выберите другой способ оплаты.
