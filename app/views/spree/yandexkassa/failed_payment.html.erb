@@ -1,0 +1,8 @@
+<div class="container">
+  <% @body_class = 'page_end_payment' %>
+  <h1>Оплата заказа не была произведена.</h1>
+  <p class="description_payment_page">
+    Попробуйте повторить платёж позднее или обратитесь к администратору сайта.
+  </p>
+  <%= link_to 'Вернуться в каталог', products_path, class: 'continue_link' %>
+</div>

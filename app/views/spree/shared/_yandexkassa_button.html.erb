@@ -1,0 +1,39 @@
+<div class="yandexkassa">
+  <% @gateway = @order.payments.last.payment_method %>
+  <% @payment_methods = @gateway.available_payment_methods @order %>
+  <% map_credit_fields @order if yandex_kassa_credit? %>
+  <% payment_service_for @order.number, "#{@order.user_id} #{yandex_kassa_identity_method(@order)}",
+                        :currency => 'RUR',
+                        :amount => @order.total.to_f,
+                        :service => :yandexkassa,
+                        :html => {:id => 'payment-form'} do |service| %>
+    <% service.scid @gateway.options[:scid] %>
+    <% service.shopId @gateway.options[:shopId] %>
+    <% unless @payment_methods.blank? %>
+      <% service.paymentType @payment_methods.first.to_s.split('_').last %>
+    <% end %>
+    <% service.shopFailURL success_payment_url %>
+    <% service.shopSuccessURL failed_payment_url %>
+    <% service.account @order.email %>
+    <% service.cancel_return_url order_url(@order) %>
+
+    <% if yandex_kassa_credit? %>
+      <% service.seller_id @gateway.options[:shopId] %>
+      <% @order.line_items.each_with_index do |line_item, i| %>
+        <% i += 1 %>
+        <% product = line_item.product %>
+        <% service.send "category_code_#{i}", product.taxons.first.category_code %>
+        <% service.send "goods_name_#{i}", truncate(product.name, length: 255) %>
+        <% service.send "goods_description_#{i}", truncate((strip_tags product.description), length: 255) %>
+        <% service.send "goods_quantity_#{i}", line_item.quantity %>
+        <% service.send "goods_cost_#{i}", product.price %>
+      <% end %>
+    <% end %>
+
+    <% if @payment_methods.present? %>
+      <%= submit_tag 'Перейти к оплате', class: 'btn btn-default btn-lg yandex_payment_submit' %>
+    <% else %>
+      Извините, оплата невозможна, потому что сумма заказа превышает лимиты по оплаты с помощью яндекс кассы. Пожалуйста вернитесь назад и выберите другой способ оплаты.
+    <% end %>
+  <% end %>
+</div>

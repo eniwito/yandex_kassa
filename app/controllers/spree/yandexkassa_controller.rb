@@ -4,6 +4,8 @@ class Spree::YandexkassaController < Spree::BaseController
 
   include OffsitePayments::Integrations
   include Spree::YandexkassaHelper
+  # For simple_current_order support in views
+  include Spree::Core::ControllerHelpers::Order
 
   # To avoid error undefined local variable or method `cache_key_for_taxons'
   helper 'spree/store'
