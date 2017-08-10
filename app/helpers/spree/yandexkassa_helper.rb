@@ -22,6 +22,8 @@ module Spree::YandexkassaHelper
   end
 
   def yandex_kassa_credit?
-    Spree::BillingIntegration::YandexkassaIntegration.all.any? { |y| y.preferences[:payment_method_KV] }
+    if Spree::PaymentMethod.table_exists?
+      Spree::BillingIntegration::YandexkassaIntegration.all.any? { |y| y.preferences[:payment_method_KV] }
+    end
   end
 end
